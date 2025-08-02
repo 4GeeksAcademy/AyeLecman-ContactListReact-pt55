@@ -37,7 +37,7 @@ Una aplicación de agenda de contactos desarrollada con React, que permite crear
 
 📁 src
 ├── 📁 components # Componentes reutilizables como ContactCard, Formulario, etc.
-├── 📁 hooks # Hooks personalizados (como useDeleteContact)
+├── 📁 hooks # Hook useGlobalReducer
 ├── 📁 pages # Vistas principales (Home, AddContact, EditContact)
 ├── 📁 store # Lógica del estado global (reducer y context)
 ├── App.jsx

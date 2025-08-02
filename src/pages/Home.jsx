@@ -188,7 +188,7 @@ export const Home = () => {
 				<div className="offcanvas-header">
 					<h2 className="offcanvas-title" id="offcanvasTopLabel">Edit contact</h2>
 					{success && <div className="alert alert-success">{success}</div>}
-					<button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+					<button type="button" className="btn-close" data-bs-dismiss="offcanvas"></button>
 				</div>
 				<div className="offcanvas-body">
 					<div className="mb-3">
@@ -222,7 +222,7 @@ export const Home = () => {
 					<div className="modal-content">
 						<div className="modal-header">
 							<h1 className="modal-title fs-5" id="exampleModalLabel">Confirm delete</h1>
-							<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+							<button type="button" className="btn-close" data-bs-dismiss="modal"></button>
 						</div>
 						<div className="modal-body">
 							Are you sure you want to delete this contact?
