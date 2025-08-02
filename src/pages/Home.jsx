@@ -21,6 +21,10 @@ export const Home = () => {
 		avatar6, avatar7, avatar8, avatar9, avatar10
 	];
 
+	const getAvatarById = (id) => {
+		return avatars[id % avatars.length];
+	};
+
 	//CONFIGURACIONES PARA CARGAR AGENDA////////////////////////////////////////////////////////////////
 	const [error, setError] = useState("");
 
@@ -95,15 +99,16 @@ export const Home = () => {
 			.then(() => {
 				loadAgenda();
 				setSelectedContact(null);
-				setSuccess("Contacto actualizado exitosamente");
+				setSuccess("Contact successfully updated");
 				setTimeout(() => setSuccess(""), 3000);
 			})
 			.catch(() => setError("Error al editar contacto"));
 	};
 
 	//CONFIGURACIONES PARA DELETE////////////////////////////////////////////////////////////////
+	const [contactoAEliminar, setContactoAEliminar] = useState(null);
+
 	const handleDeleteContact = (contactId) => {
-		if (!window.confirm("¿Estás segura de que querés borrar este contacto?")) return;
 
 		fetch(`https://playground.4geeks.com/contact/agendas/${store.agenda}/contacts/${contactId}`, {
 			method: "DELETE"
@@ -111,7 +116,7 @@ export const Home = () => {
 			.then(res => {
 				if (!res.ok) throw new Error();
 				loadAgenda();
-				setSuccess("Contacto eliminado exitosamente");
+				setSuccess("Contact successfully deleted");
 				setTimeout(() => setSuccess(""), 5000);
 			})
 			.catch(() => setError("Error al borrar contacto"));
@@ -130,28 +135,28 @@ export const Home = () => {
 			</div>
 
 			{error && <p className="text-danger">{error}</p>}
-			{success && <div className="alert alert-success">{success}</div>}
+			{success && <div className="alert alert-success text-center mx-auto w-auto">{success}</div>}
 
 			<ul className="list-group px-3 px-md-5 w-100">
-				{store.contacts?.map((contact, index) => (
+				{store && store.contacts?.map((contact) => (
 					<li key={contact.id} className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3 p-1 mt-5 mt-md-0 p-md-3 lh-lg">
 						<div className="row align-items-center">
 							<div className="col-12 col-md-12 d-flex align-items-center p-0 py-md-3">
-							<img
-								src={avatars[index % avatars.length]}
-								alt={`Avatar ${index + 1}`}
-								className="ms-0 mx-md-5"
-								style={{ width: "80px", height: "80px" }}
-							/>
-							<div className="text-start ms-3">
-								<h5 className="mb-1">{contact.name}</h5>
-								<p className="mb-1">
-									<i className="bi bi-geo-alt"></i> {contact.address}<br />
-									<i className="bi bi-telephone"></i> {contact.phone}<br />
-									<i className="bi bi-envelope"></i> {contact.email}
-								</p>
+								<img
+									src={getAvatarById(contact.id)}
+									alt="Avatar"
+									className="ms-0 mx-md-5"
+									style={{ width: "80px", height: "80px" }}
+								/>
+								<div className="text-start ms-3">
+									<h5 className="mb-1">{contact.name}</h5>
+									<p className="mb-1">
+										<i className="bi bi-geo-alt"></i> {contact.address}<br />
+										<i className="bi bi-telephone"></i> {contact.phone}<br />
+										<i className="bi bi-envelope"></i> {contact.email}
+									</p>
+								</div>
 							</div>
-						</div>
 						</div>
 
 						<div className="col-12 col-md-2 d-flex justify-content-end align-items-center gap-2">
@@ -165,7 +170,9 @@ export const Home = () => {
 							</button>
 							<button
 								className="btn btn-light btn-sm border-0 bg-transparent delete-btn"
-								onClick={() => handleDeleteContact(contact.id)}
+								data-bs-toggle="modal"
+								data-bs-target="#exampleModal"
+								onClick={() => setContactoAEliminar(contact.id)}
 							>
 								<i className="bi bi-trash text-danger fs-5"></i>
 							</button>
@@ -174,18 +181,18 @@ export const Home = () => {
 				))}
 			</ul>
 
-			<div className="offcanvas offcanvas-top"
+			<div className="offcanvas offcanvas-top pt-5 px-5"
 				tabIndex="-1"
 				id="offcanvasTop"
 				style={{ height: "70vh" }}>
 				<div className="offcanvas-header">
-					<h2 className="offcanvas-title" id="offcanvasTopLabel">Editar contacto</h2>
+					<h2 className="offcanvas-title" id="offcanvasTopLabel">Edit contact</h2>
 					{success && <div className="alert alert-success">{success}</div>}
 					<button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 				</div>
 				<div className="offcanvas-body">
 					<div className="mb-3">
-						<label className="form-label">Nombre</label>
+						<label className="form-label">Name</label>
 						<input className="form-control" name="name" value={formData.name} onChange={handleChange} />
 					</div>
 					<div className="mb-3">
@@ -193,18 +200,52 @@ export const Home = () => {
 						<input className="form-control" name="email" value={formData.email} onChange={handleChange} />
 					</div>
 					<div className="mb-3">
-						<label className="form-label">Teléfono</label>
+						<label className="form-label">Phone</label>
 						<input className="form-control" name="phone" value={formData.phone} onChange={handleChange} />
 					</div>
 					<div className="mb-3">
-						<label className="form-label">Dirección</label>
+						<label className="form-label">Address</label>
 						<input className="form-control" name="address" value={formData.address} onChange={handleChange} />
 					</div>
-					<button className="btn btn-primary" onClick={handleSaveChanges}>
-						Guardar cambios
+					<button className="btn btn-primary mt-3 mx-auto d-block" onClick={handleSaveChanges}>
+						Save changes
 					</button>
 				</div>
 			</div>
+
+			<div
+				className="modal fade"
+				id="exampleModal"
+				tabIndex="-1"
+			>
+				<div className="modal-dialog">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h1 className="modal-title fs-5" id="exampleModalLabel">Confirm delete</h1>
+							<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+						</div>
+						<div className="modal-body">
+							Are you sure you want to delete this contact?
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+								Cancel
+							</button>
+							<button
+								type="button"
+								className="btn btn-danger"
+								data-bs-dismiss="modal"
+								onClick={() => {
+									if (contactoAEliminar !== null) handleDeleteContact(contactoAEliminar);
+								}}
+							>
+								Yes, delete!
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	);
 }; 
