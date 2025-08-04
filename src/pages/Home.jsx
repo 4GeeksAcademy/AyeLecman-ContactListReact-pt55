@@ -144,7 +144,6 @@ export const Home = () => {
 							<div className="col-12 col-md-12 d-flex align-items-center p-0 py-md-3">
 								<img
 									src={getAvatarById(contact.id)}
-									alt="Avatar"
 									className="ms-0 mx-md-5"
 									style={{ width: "80px", height: "80px" }}
 								/>

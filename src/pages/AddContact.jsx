@@ -44,7 +44,7 @@ export const AddContact = () => {
       setEmail("");
       setPhone("");
       setAddress("");
-      setSuccess("Contacto agregado correctamente");
+      setSuccess("Contact successfully added");
       setTimeout(() => setSuccess(""), 5000);
       setError("");
     });
